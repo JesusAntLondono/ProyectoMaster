@@ -1,0 +1,12 @@
+package com.unir.springboot.app.msusers.models.entity;
+
+import java.io.Serializable;
+
+public class User implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8051731423939627894L;
+
+}

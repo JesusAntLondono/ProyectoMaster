@@ -1,0 +1,5 @@
+package com.unir.springboot.app.msauth.security;
+
+public class InfoAdicionalToken {
+
+}

@@ -1,0 +1,53 @@
+package com.unir.springboot.app.msauth.service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+import com.unir.springboot.app.msauth.clients.UserClientRest;
+import com.unir.springboot.app.msauth.models.User;
+
+@Service("serviceFeign")
+public class AuthServiceFeign implements IAuthService, UserDetailsService {
+
+	private Logger log = org.slf4j.LoggerFactory.getLogger(AuthServiceFeign.class);
+
+	@Autowired
+	private UserClientRest clientFeign;
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+		try {
+			User user = clientFeign.Ver(username);
+
+			List<GrantedAuthority> authorities = user.getRoles().stream()
+					.map(role -> new SimpleGrantedAuthority(role.getName()))
+					.peek(authority -> log.info("Role: " + authority.getAuthority())).collect(Collectors.toList());
+
+			log.info("Usuario autenticado: " + username);
+
+			return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
+					user.getEnabled(), true, true, true, authorities);
+		} catch (Exception e) {
+			String error = "Error en el login, no existe el usuario '" + username + "' en el sistema";
+			log.error(error);
+
+			throw new UsernameNotFoundException(error);
+		}
+	}
+
+	@Override
+	public User findByUsername(String username) {
+		return clientFeign.Ver(username);
+	}
+
+}

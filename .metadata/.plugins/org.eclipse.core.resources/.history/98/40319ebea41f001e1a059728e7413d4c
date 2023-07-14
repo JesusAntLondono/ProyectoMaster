@@ -1,0 +1,13 @@
+package com.unir.springboot.app.msauth.service;
+
+import com.unir.springboot.app.msauth.models.User;
+
+public class AuthServiceFeign implements IAuthService {
+
+	@Override
+	public User findByUsername(String username) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

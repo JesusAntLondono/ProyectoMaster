@@ -1,0 +1,8 @@
+package com.unir.springboot.app.msauth.service;
+
+import com.unir.springboot.app.msauth.models.User;
+
+@Bean
+public interface IAuthService {
+	public User findByUsername(String username);
+}

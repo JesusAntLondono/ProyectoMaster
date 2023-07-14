@@ -1,0 +1,39 @@
+package com.unir.springboot.app.msauth.security;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+
+public class TokenUtils {
+
+	private final static String ACCESS_TOKEN_SECRET = "4qhq8LrEBfYcaRHxhdb9zURb2rf8e7Ud";
+	private final static Long ACCESS_TOKEN_VALIDITY_SECONS = 2592000L;
+	
+	
+	public static String createToken(String name, String email) {
+		long expirationTime = ACCESS_TOKEN_VALIDITY_SECONS * 1000;
+		Date expirationDate = new Date(System.currentTimeMillis() + expirationTime);
+		
+		Map<String, Object> extra = new HashMap<>();
+		extra.put("name", name);
+		
+		return Jwts.builder()
+				.setSubject(email)
+				.setExpiration(expirationDate)
+				.addClaims(extra)
+				.signWith(Keys.hmacShaKeyFor(ACCESS_TOKEN_SECRET.getBytes()))
+				.compact();
+	}
+	
+	public static UsernamePasswordAuthenticationToken getAuthentication (String token)
+	{
+		
+		return null;
+	}
+	
+}

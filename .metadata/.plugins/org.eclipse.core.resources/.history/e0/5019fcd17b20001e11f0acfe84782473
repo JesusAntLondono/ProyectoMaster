@@ -1,0 +1,19 @@
+package com.unir.springboot.app.msauth.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.unir.springboot.app.msauth.clients.UserClientRest;
+import com.unir.springboot.app.msauth.models.User;
+
+@Service("serviceFeign")
+public class AuthServiceFeign implements IAuthService {
+	
+	@Autowired
+	private UserClientRest clientFeign;
+
+	@Override
+	public User findByUsername(String username) {
+		return clientFeign.Ver(username);
+	}
+}

@@ -1,0 +1,12 @@
+package com.unir.springboot.app.msusers.models.entity;
+
+import java.io.Serializable;
+
+public class Role implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2320359535384833778L;
+
+}

@@ -1,0 +1,34 @@
+package com.unir.springboot.app.msauth.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+import com.unir.springboot.app.msauth.clients.UserClientRest;
+import com.unir.springboot.app.msauth.models.User;
+import com.unir.springboot.app.msauth.models.UserDetailsImpl;
+
+@Service("serviceFeign")
+public class AuthServiceFeign implements IAuthService, UserDetailsService {
+
+	@Autowired
+	private UserClientRest clientFeign;
+
+	@Override
+	public User findByUsername(String username) {
+		return clientFeign.Ver(username);
+	}
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		User user = clientFeign.Ver(username);
+		if (user == null) {
+			throw new UsernameNotFoundException(
+					"Error en el login, no existe el usuario '" + username + "' en el sistema");
+		}
+		return new UserDetailsImpl(user);
+	}
+
+}

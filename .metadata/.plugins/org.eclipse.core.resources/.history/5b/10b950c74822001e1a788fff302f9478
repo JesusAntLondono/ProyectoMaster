@@ -1,0 +1,5 @@
+package com.unir.springboot.app.msproducts.models.dao;
+
+public class DatosInicialesLoader {
+
+}

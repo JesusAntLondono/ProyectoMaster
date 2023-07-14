@@ -1,0 +1,27 @@
+package com.unir.springboot.app.msauth.controllers;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.unir.springboot.app.msauth.models.User;
+import com.unir.springboot.app.msauth.service.IAuthService;
+
+@RestController
+@Qualifier("serviceFeign")
+public class AuthController {
+	private static Logger log = LoggerFactory.getLogger(AuthController.class);
+	
+	@Autowired
+	private IAuthService authService;
+	
+	@GetMapping("/ver/{username}")
+	public User Ver(@PathVariable String username) {
+		return authService.findByUsername(username);
+	}
+
+}

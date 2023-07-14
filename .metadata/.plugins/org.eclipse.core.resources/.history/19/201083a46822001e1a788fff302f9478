@@ -1,0 +1,20 @@
+[
+  {
+    "_id": {"$oid": "616b6da3a94f9f153e45c747"},
+    "name": "Reebok",
+    "price": 300000,
+    "dateAt": "2023-07-14"
+  },
+  {
+    "_id": {"$oid": "616b6da3a94f9f153e45c748"},
+    "name": "Adidas",
+    "price": 200000,
+    "dateAt": "2023-07-14"
+  },
+  {
+    "_id": {"$oid": "616b6da3a94f9f153e45c749"},
+    "name": "Nike",
+    "price": 120000,
+    "dateAt": "2023-07-14"
+  }
+]

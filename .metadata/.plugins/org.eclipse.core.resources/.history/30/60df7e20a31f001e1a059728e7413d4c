@@ -1,0 +1,5 @@
+package com.unir.springboot.app.msauth.service;
+
+public interface IAuthService {
+
+}

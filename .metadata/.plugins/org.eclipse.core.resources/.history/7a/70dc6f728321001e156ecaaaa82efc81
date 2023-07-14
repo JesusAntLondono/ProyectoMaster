@@ -1,0 +1,95 @@
+package com.unir.springboot.app.msauth.security;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.unir.springboot.app.msauth.service.AuthServiceFeign;
+
+import static org.springframework.security.config.Customizer.withDefaults;
+
+@Configuration
+@EnableWebSecurity
+public class WebSecurityConfig {
+
+	
+	@Autowired
+	UserDetailsService userDetailsService;
+	
+	@Autowired
+	JwtAuthorizationFilter jwtAuthorizationFilter;
+
+	@Bean
+	SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authManager) throws Exception {
+
+		JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter();
+		jwtAuthenticationFilter.setAuthenticationManager(authManager);
+		jwtAuthenticationFilter.setFilterProcessesUrl("/token");
+
+		http
+			.csrf((csrf) -> csrf.disable())
+			.authorizeHttpRequests((authorizeRequests) ->
+				authorizeRequests
+					.anyRequest().authenticated()
+			)
+			.addFilter(jwtAuthenticationFilter)
+			.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
+			.httpBasic(withDefaults());
+		return http.build();
+		
+//		http.csrf(csrf -> csrf.disable());
+//		http.authorizeHttpRequests(ahr -> ahr.anyRequest().authenticated());
+//		http.sessionManagement(sees -> sees.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+//		http.addFilter(jwtAuthenticationFilter);
+//		http.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
+//        http.httpBasic(withDefaults());
+//		return http.build();
+
+//		return http.csrf().disable()
+//				.authorizeHttpRequests().anyRequest().authenticated().and().httpBasic().and()
+//				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+//				.addFilter(jwtAuthenticationFilter)
+//				.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class).build();
+
+	}
+
+//	@Bean
+//	UserDetailsService userDetailsService(){
+//		InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
+//		manager.createUser(User.withUsername("admin")
+//			.password( passwordEncoder().encode("admin"))
+//			.roles()
+//			.build());
+//		return manager;
+//	}
+
+	
+	@SuppressWarnings("removal")
+	@Bean
+	AuthenticationManager authManager(HttpSecurity http) throws Exception {
+		return http.getSharedObject(AuthenticationManagerBuilder.class).userDetailsService(userDetailsService)
+				.passwordEncoder(passwordEncoder()).and().build();
+	}
+
+	@Bean
+	PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+
+	public static void main(String[] args) {
+		System.out.println("pass: " + new BCryptPasswordEncoder().encode("12345"));
+	}
+
+}

@@ -1,0 +1,45 @@
+package com.unir.springboot.app.msproducts.models.dao;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.unir.springboot.app.msproducts.models.entity.Product;
+
+import jakarta.annotation.PostConstruct;
+
+@Component
+public class DatosInicialesLoader {
+
+	private final ProductDao mongoRepository;
+	private final ObjectMapper objectMapper;
+
+	public DatosInicialesLoader(ProductDao mongoRepository, ObjectMapper objectMapper) {
+		this.mongoRepository = mongoRepository;
+		this.objectMapper = objectMapper;
+	}
+
+	@PostConstruct
+	public void cargarDatosIniciales() throws IOException {
+		long count = mongoRepository.count();
+		if (count == 0) {
+			String archivoImportacion = "datos_iniciales.json";
+
+			ClassPathResource resource = new ClassPathResource(archivoImportacion);
+			List<Product> entidades = Arrays.asList(objectMapper.readValue(resource.getFile(), Product[].class));
+
+			mongoRepository.saveAll(entidades);
+			System.out.println("Datos iniciales cargado");
+		}
+		else
+		{
+			System.out.println("Base de datos con información no se cargan datos iniciales.");
+		}
+
+	}
+
+}

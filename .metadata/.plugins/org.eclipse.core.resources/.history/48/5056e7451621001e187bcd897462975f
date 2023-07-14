@@ -1,0 +1,10 @@
+package com.unir.springboot.app.msauth.models;
+
+import lombok.Data;
+
+@Data
+public class AuthCredentials {
+
+	private String username;
+	private String password;
+}

@@ -1,0 +1,17 @@
+package com.unir.springboot.app.msusers.models.entity;
+
+import java.io.Serializable;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "users")
+public class User implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8051731423939627894L;
+
+}

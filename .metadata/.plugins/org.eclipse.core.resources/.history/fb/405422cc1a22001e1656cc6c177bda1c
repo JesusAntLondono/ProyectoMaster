@@ -1,0 +1,12 @@
+spring.application.name=service-msproducts
+server.port=${PORT:0}
+
+eureka.instance.instance-id=${spring.application.name}:${spring.application.instance_id:${random.value}}
+eureka.client.service-url.defaultZone=http://localhost:8761/eureka
+
+spring.data.mongodb.host=localhost
+spring.data.mongodb.port=57017
+spring.data.mongodb.password=adm1n
+spring.data.mongodb.username=root
+spring.data.mongodb.authentication-database=admin
+spring.data.mongodb.database=ProductsDB

@@ -1,0 +1,5 @@
+package com.unir.springboot.app.msusers.models.dao;
+
+public interface UserDao {
+
+}
